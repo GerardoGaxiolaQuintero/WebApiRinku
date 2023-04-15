@@ -14,6 +14,8 @@ namespace WebApiRinku.Model
     {
         public SqlConnection Conecta()
         {
+            //clase para conectar a la base de datos obteniendo la configuración del appsetting.json 
+            //Para en dado caso que se necesite cambiar la conexión no se tenga que compilar de nuevo 
             var builder = new ConfigurationBuilder()
              .SetBasePath(Directory.GetCurrentDirectory())
              .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
@@ -24,6 +26,11 @@ namespace WebApiRinku.Model
             return con;
         }
 
+
+        /// <summary>
+        /// Obtiene el listado de empleados activos 
+        /// </summary>
+        /// <returns></returns>
         public DataSet ObtenerEmpleados_Todos()
         {
             SqlConnection con = Conecta();
@@ -32,13 +39,7 @@ namespace WebApiRinku.Model
             DataSet ds = new DataSet();
 
 
-            //SqlCommand COM = new SqlCommand("Empleados_R_Todos", con);
-            //COM.CommandType = CommandType.StoredProcedure;
-            ////COM.Parameters.Add
-            //SqlDataAdapter da = new SqlDataAdapter(COM);
-            //da.Fill(ds);
-            //msg = "SUCCESS";
-            //return ds;
+          
 
 
             try
@@ -71,7 +72,10 @@ namespace WebApiRinku.Model
             return ds;
         }
 
-
+        /// <summary>
+        /// /Obtiene el listado de roles para los catalogos
+        /// </summary>
+        /// <returns></returns>
         public DataSet ObtenerRoles_Todos()
         {
             SqlConnection con = Conecta();
@@ -115,7 +119,10 @@ namespace WebApiRinku.Model
 
 
 
-
+        /// <summary>
+        /// Obtiene el listado de meses para los catalogos 
+        /// </summary>
+        /// <returns></returns>
         public DataSet ObtenerMeses_Todos()
         {
             SqlConnection con = Conecta();
@@ -159,7 +166,11 @@ namespace WebApiRinku.Model
 
 
 
-
+        /// <summary>
+        /// Obtiene todas las nominas por mes
+        /// </summary>
+        /// <param name="mes"></param>
+        /// <returns></returns>
         public DataSet ObtenerNominas_Todas_ByMes(int mes )
         {
             SqlConnection con = Conecta();
@@ -202,7 +213,11 @@ namespace WebApiRinku.Model
             return ds;
         }
 
-
+        /// <summary>
+        /// Obtiene un empleado solamente por ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataSet Empleado_ById(int id)
         {
             SqlConnection con = Conecta();
@@ -247,7 +262,11 @@ namespace WebApiRinku.Model
 
 
 
-
+        /// <summary>
+        /// /Obtiene un movimiento por id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataSet Movimiento_ById(int id)
         {
             SqlConnection con = Conecta();
@@ -291,7 +310,11 @@ namespace WebApiRinku.Model
         }
 
 
-
+        /// <summary>
+        /// Da de alta aun Empleado
+        /// </summary>
+        /// <param name="Emp"></param>
+        /// <returns></returns>
 
         public DataSet EmpleadoCreate(Empleado Emp)
         {
@@ -354,7 +377,11 @@ namespace WebApiRinku.Model
             }
             return ds;
         }
-
+        /// <summary>
+        /// Elimina a un empleado por medio del idEmpleado
+        /// </summary>
+        /// <param name="idEmpleado"></param>
+        /// <returns></returns>
         public string EliminaEmpleado(long  idEmpleado)
         {
             SqlConnection con = Conecta();
@@ -399,7 +426,11 @@ namespace WebApiRinku.Model
             return msg;
         }
 
-
+        /// <summary>
+        /// Elimina un movimiento por medio del idMovimiento 
+        /// </summary>
+        /// <param name="idMovimiento"></param>
+        /// <returns></returns>
         public string EliminaMovimiento(long idMovimiento)
         {
             SqlConnection con = Conecta();
@@ -444,7 +475,11 @@ namespace WebApiRinku.Model
             return msg;
         }
 
-
+        /// <summary>
+        /// Da de alta un nuevo Movimiento 
+        /// </summary>
+        /// <param name="Mov"></param>
+        /// <returns></returns>
         public DataSet MovimientoCreate(Movimiento Mov)
         {
             string Log = "";
@@ -510,12 +545,15 @@ namespace WebApiRinku.Model
 
 
 
-
+        /// <summary>
+        /// Guarda el mensaje que le pase como parametro en un log 
+        /// </summary>
+        /// <param name="message"></param>
 
         public static void EscribeLog(string message)
         {
 
-            string path = "C://Faltantes//Log2.txt";
+            string path = "C://RinKu//Log2.txt";
             StreamWriter stream = null;
             try
             {

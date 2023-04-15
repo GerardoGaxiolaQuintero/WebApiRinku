@@ -40,7 +40,7 @@ namespace WebApiRinku.Controllers
                     case 1:
                         Bono = 10 * HorasT;
                         break;
-                    case 3:
+                    case 2:
                         Bono = 5 * HorasT;
                         break;
                 }
