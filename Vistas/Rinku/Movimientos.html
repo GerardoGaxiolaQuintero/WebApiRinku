@@ -1,0 +1,354 @@
+<htm>
+    <head>
+        <!-- CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        
+        <script src="https://code.jquery.com/jquery-3.0.0.js"crossorigin="anonymous"></script>
+        <!-- jQuery and JS bundle w/ Popper.js -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+     <meta name="tipo_contenido"  content="text/html;" http-equiv="content-type" charset="utf-8">
+	</head>
+    <body>
+        <div class="menuContainer"></div>
+<script>
+    $(document).ready(function () {
+      $('.menuContainer').load('cabecera.html');
+    });
+  </script>  
+<div class="row">
+    <!-- <div class="col-md-2 text-right"> 
+      <button type="button" class="btn btn-warning" onclick="IrFormularioInicio()">Regresar</button>
+    </div>-->
+    <div class="text-center col-md-12">
+        <h2 id="TituloRegistro"></h2>
+    </div>
+</div>
+   
+
+
+    <div class="container">
+
+        <div class="container" id="PanelCapturaMovimiento" style="display: none;">
+
+            <div class="row mt-3">
+              <div class="col-12">
+                <form>
+                   
+                  
+
+
+                    <div class="form-group">
+                        <label >Rol Empleado</label>
+                       <input type="text"  id="TxtidEmpleado" style="display:none" >
+                       <input type="text"  id="TxtidMovimiento"  value="0" style="display:none">
+                                <select name="SEmpleadoRol" id="SEmpleadoRol" class="form-control " >
+                                  <option value="0">Seleccione un Rol</option>
+                                </select>
+                    </div>
+                    <div class="form-group">
+                        <label >Año</label>
+                        <input type="number" class="form-control" id="TxtAnio" placeholder="">
+                    </div>
+
+                    <div class="form-group">
+                        <label >Mes</label>
+                      <!--  <input type="text" class="form-control" id="TxtSKU" placeholder="">-->
+                        <select name="SMes" id="SMes" class="form-control " >
+                                  <option value="0">Seleccione un Mes</option>
+                                </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label >Cantidad de entregas</label>
+                        <input type="number" class="form-control" id="TxtCantidadEbtregas" placeholder="">
+                    </div>
+                  
+                    
+
+                  <div class="col-md-12 text-right"> 
+                    <button type="button" class="btn btn-success" onclick="GuardaMovimiento()" id="btnGuardar">Guardar</button>
+                  </div>
+                    </div>
+                  
+                    
+                      
+                  </form>
+              </div>
+            </div>
+          </div>   
+
+
+</div>
+
+
+        <div class="container">
+            <div class="row mb-3 mt-3">
+                <div class="col-md-12 row">
+                     <div class="col-md-6 text-left">
+
+                   
+
+                    <button type="button" class="btn btn-warning" onclick="Regresar()" >Atrás</button>
+                   
+                </div>
+
+                <div class="col-md-6 text-right">
+
+                    <i class="bi bi-arrow-left-square"></i>
+
+                    <button type="button" class="btn btn-primary" onclick="MuestraNuevoMovimiento()" id="BtnMuestraMovimiento">Capturar Movimiento</button>
+                    <button type="button" class="btn btn-warning" onclick="OcultaNuevoMovimiento()" style="display: none;" id="BtnOcultaMovimiento">-</button>
+                </div>
+                </div>
+               
+            </div>
+            <div class="col-md-12 text-center">
+                <h2>Listado de Entregas por mes</h2>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Año</th>
+                        <th scope="col">Mes</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Cantidad de Entregas</th>
+                       
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+    </body>
+    <script>
+
+
+
+function Regresar()
+{
+     window.location = "Empleados.html";
+}
+
+
+        window.onload = function() {
+           CargaCatalogos();
+            var id = $.urlParam('id');
+             Obtener(id);
+
+        };
+
+         $.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null) {
+            return null;
+            }
+            return decodeURI(results[1]) || 0;
+        }
+
+
+function IrFormularioInicio(){
+            window.location = "Inicio.html";
+        }
+
+            function MuestraNuevoMovimiento(){
+                $("#PanelCapturaMovimiento").show();
+                $("#BtnMuestraMovimiento").hide();
+                $("#BtnOcultaMovimiento").show();
+            }
+
+
+            function OcultaNuevoMovimiento ()
+            {
+                  $("#PanelCapturaMovimiento").hide();
+                $("#BtnMuestraMovimiento").show();
+                $("#BtnOcultaMovimiento").hide();
+            }
+
+        function IrFormularioCrear(){
+            window.location = "Registro.html";
+        }
+
+
+        function FormatFecha (fecha)
+        {
+            let fechacompleta = fecha.split('T');
+            let ApartadoFecha = fechacompleta[0];
+            return ApartadoFecha;
+        }
+
+
+function  CargaCatalogos()
+{
+     
+
+     //alert(empleados);
+
+            $.get("https://localhost:44339/api/Roles")
+            .done(function( response ) {
+                console.log(response);
+                $.each( response, function(id,fila ) {
+                      $("#SEmpleadoRol").append("<option value='"+fila.id+"'>"+fila.descripcion+"</option>");
+                });
+            });
+
+
+              $.get("https://localhost:44339/api/Meses")
+            .done(function( response ) {
+                console.log(response);
+                $.each( response, function(id,fila ) {
+                      $("#SMes").append("<option value='"+fila.id+"'>"+fila.descripcion+"</option>");
+                });
+            });
+
+          
+            
+}
+
+
+
+
+function GuardaMovimiento(){
+
+           var idMovimiento = $("#TxtidMovimiento").val();
+           var idEmpleadoG = $("#TxtidEmpleado").val();
+           var Anio = $("#TxtAnio").val();
+
+         
+           
+                
+           
+
+           
+    
+    var data = {
+                    idMovimiento: $("#TxtidMovimiento").val(),
+                    idEmpleado : $("#TxtidEmpleado").val(),
+                    idRol : $("#SEmpleadoRol").val(),
+                    descRol : "",
+                    Anio : Anio,
+                    idMes : $("#SMes").val(),
+                    descMes : "",
+                    cantEntrega: $("#TxtCantidadEbtregas").val()
+                   
+                } 
+
+                
+
+                     console.log(data);
+               
+                 $.ajax({
+                method: "POST",
+                url: "https://localhost:44339/api/ListaMovimientos",
+                contentType: 'application/json',
+                data: JSON.stringify(data), 
+                })
+                .done(function( response ) {
+                    console.log(response);
+                    if(response){
+                        alert("Se guardó correctamente el movimiento");
+                        window.location = "Movimientos.html?id="+idEmpleadoG;
+                    }else{
+                        alert("Error ")
+                    }
+                });
+            
+
+  
+               
+
+
+           
+
+        }
+
+
+
+
+        function Obtener(id){
+
+
+        
+
+            $(".table tbody").html("");
+
+            $.get("https://localhost:44339/api/ListaMovimientos/"+id)
+            .done(function( response ) {
+                console.log(response);
+                $.each( response, function( id, fila ) {
+                    $("<tr>").append(
+                        $("<td>").text(fila.anio),
+                        $("<td>").text(fila.descMes),
+                        $("<td>").text(fila.descRol),
+                        $("<td>").text(fila.cantEntrega),
+                       
+                       
+                        $("<td>").append(
+                            $("<button>").data("id",fila.idMovimiento).addClass("btn btn-success btn-sm mr-1 editar").text("Editar").attr({"type":"button"}),
+                            $("<button>").data("id",fila.idMovimiento).addClass("btn btn-danger btn-sm eliminar").text("Eliminar").attr({"type":"button"})
+                        )
+                    ).appendTo(".table");
+                });
+            });
+
+              $.get("https://localhost:44339/api/Empleado/" + id)
+            .done(function( response ) {
+                console.log("Empleado Consultada",response);
+                $("#SEmpleadoRol").val(response.idRol),
+                $("#TituloRegistro").html("Empleado #"+response.idEmpleado+" "+response.nombre+" "+response.apePat+" "+response.apeMat),
+                $("#TxtidEmpleado").val(response.idEmpleado)
+                
+            });
+        }
+
+        $(document).on('click', '.editar', function () {
+            var idMov = ($(this).data("id"));
+            
+
+             $.get("https://localhost:44339/api/Movimientos/" + idMov)
+            .done(function( response ) {
+                console.log("movimiento Consultado",response);
+                      
+                        $("#SEmpleadoRol").val(response.idRol);
+                        $("#TxtidMovimiento").val(response.idMovimiento);
+                       $("#SMes").val(response.idMes);
+                       $("#TxtCantidadEbtregas").val(response.cantEntrega);
+                       $("#TxtAnio").val(response.anio);
+                
+                
+            });
+
+            MuestraNuevoMovimiento();
+            
+        });
+
+
+        $(document).on('click', '.eliminar', function () {
+            console.log($(this).data("id"));
+
+var idMovimiento = $(this).data("id");
+
+
+if (confirm("¿Desea eliminar el movimiento ?") == true) {
+  
+             $.get("https://localhost:44339/api/MovimientoDelete/" + idMovimiento)
+            .done(function( response ) {
+                console.log(response);
+               alert(response);
+            var idEmpleado = $("#TxtidEmpleado").val();
+                 Obtener(idEmpleado);
+               
+            });
+
+        } 
+            
+        });
+
+
+    </script>
+</htm>
