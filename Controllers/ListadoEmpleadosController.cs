@@ -12,6 +12,7 @@ namespace WebApiRinku.Controllers
     [ApiController]
     public class ListadoEmpleadosController : ControllerBase
     {
+        //Consulta el listado de todos los empleados 
         db dbop = new db();
         [HttpGet]
         public List<Empleado> ListadoEmpleados()

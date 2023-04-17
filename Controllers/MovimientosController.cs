@@ -13,6 +13,12 @@ namespace WebApiRinku.Controllers
     public class MovimientosController : ControllerBase
     {
         db dbop = new db();
+
+        /// <summary>
+        /// Consulta un Movimiento por el iDMovimiento para su edición
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public Movimiento Movimiento_By_id(int id)
         {

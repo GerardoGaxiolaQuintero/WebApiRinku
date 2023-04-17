@@ -12,6 +12,9 @@ namespace WebApiRinku.Controllers
     [ApiController]
     public class EmpleadoDeleteController : ControllerBase
     {
+        /// <summary>
+        /// Recibe por metodo Get el id de un empleado y lo elimina 
+        /// </summary>
         db dbop = new db();
         [HttpGet("{id}")]
         public string  DeleteEmpleadoById(long  id)

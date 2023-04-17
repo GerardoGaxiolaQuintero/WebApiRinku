@@ -16,6 +16,11 @@ namespace WebApiRinku.Controllers
         
         
             db dbop = new db();
+        /// <summary>
+        /// /Elimina un movimiento por el idMovimiento 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
             [HttpGet("{id}")]
             public string DeleteMovimientoById(long id)
             {

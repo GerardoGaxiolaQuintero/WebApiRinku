@@ -13,6 +13,11 @@ namespace WebApiRinku.Controllers
     public class MesesController : Controller
     {
         db dbop = new db();
+
+        /// <summary>
+        /// Consultamos un listado de meses que tenemos en el  catalogo 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public List<Catalogo> ListadoMeses()
         {

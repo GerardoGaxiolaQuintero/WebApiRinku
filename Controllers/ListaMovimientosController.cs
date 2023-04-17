@@ -12,7 +12,14 @@ namespace WebApiRinku.Controllers
     [ApiController]
     public class ListaMovimientosController : ControllerBase
     {
+
         db dbop = new db();
+
+        /// <summary>
+        /// Obtiene el listado de movimientos(Entregas) capturados de un empleado por su IdEmpleado
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public List<Movimiento> ListadoMovimientos(int id)
         {
@@ -44,6 +51,12 @@ namespace WebApiRinku.Controllers
             return lstMovimientos;
         }
 
+
+        /// <summary>
+        /// Guarda o edita un movimiento dependiendo si trae idMovimiento 
+        /// </summary>
+        /// <param name="Mov"></param>
+        /// <returns></returns>
         [HttpPost]
         public string GuardaMovimiento([FromBody] Movimiento Mov)
         {
@@ -54,7 +67,7 @@ namespace WebApiRinku.Controllers
             {
                 DataSet ds = dbop.MovimientoCreate(Mov);
                
-               // idGenerado = Convert.ToInt64(ds.Tables[0].Rows[0][0].ToString());
+              
 
                 msg = "Movimiento Guardado Correctamente";
 

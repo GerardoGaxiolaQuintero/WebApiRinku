@@ -15,6 +15,13 @@ namespace WebApiRinku.Controllers
 
 
         db dbop = new db();
+
+        /// <summary>
+        /// Muestra el listado de la nómina de todos los trabajadores activos consultada por el año y mes 
+        /// </summary>
+        /// <param name="Anio"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public List<EmpleadoNomina> ListadoNomina(string Anio,int id)
         {
@@ -23,12 +30,13 @@ namespace WebApiRinku.Controllers
 
             List<Variable> Variables = new List<Variable>();
 
+            ///Consultamos todos los datos variables plasmados en un catalogo necesario para calcular la nomina 
             DataSet dsVariables = dbop.ObtenerVariablesNomina(Anio);
 
             decimal JornadaLaboral = 0, DiaSemana = 0, PorceISR = 0, PorceVales = 0, SemanasMes = 0;
 
             
-
+            //REcorremos estos datos y los guardamos en sus respectivas variables 
             foreach (DataRow drVariable in dsVariables.Tables[0].Rows)
             {
                 string TituloVariante = drVariable["DescVariante"].ToString();
@@ -55,53 +63,70 @@ namespace WebApiRinku.Controllers
                         break;
 
 
+
                 }
             }
 
-            //int HorasTrabajadasGeneral = (JornadaLaboral * DiaSemana) * SemanasMes;
+            ///Calculamos las horas trabajadas 
+            int HorasTrabajadasGeneral = decimal.ToInt32((JornadaLaboral * DiaSemana) * SemanasMes);
 
 
             List<EmpleadoNomina> lstEmpleadoNomina = new List<EmpleadoNomina>();
+
+            //obtenemos el listado de todos los empleados activos para empezar con el cálculo de la nomina 
             DataSet ds = dbop.ObtenerNominas_Todas_ByMes(Anio, id);
 
             foreach (DataRow dr in ds.Tables[0].Rows)
             {
-                int HorasT = (Convert.ToInt32(dr["CantEntregadas"].ToString()) > 0 ) ? 192 : 0;
+                //si no tiene capturadas entregas tomamos en cuenta 0 horas trabajadas 
+                int HorasT = (Convert.ToInt32(dr["CantEntregadas"].ToString()) > 0 ) ? HorasTrabajadasGeneral : 0;
                 int idRol = Convert.ToInt32(dr["idRol"].ToString());
-                decimal SueldoBase = HorasT * 30;
+                ///calculamos el sueldo base 
+                decimal SueldoBase = HorasT * Convert.ToDecimal(dr["SueldoBasePH"].ToString());
                 decimal Bono = 0, PagoPorEntregas = 0;
                 decimal ISR = 0;
+                decimal ISRTOTAL = 0;
                decimal   SueldoTotal = 0;
                 decimal vales = 0;
                 decimal SueldoFinal = 0;
 
-                PagoPorEntregas = Convert.ToInt32(dr["CantEntregadas"].ToString()) * 5;
+                //Calculamos el pago por entregas 
+                PagoPorEntregas = Convert.ToInt32(dr["CantEntregadas"].ToString()) * Convert.ToDecimal(dr["PagoPorEntrega"].ToString());
 
-                switch (idRol)
-                {
-                    case 1:
-                        Bono = 10 * HorasT;
-                        break;
-                    case 2:
-                        Bono = 5 * HorasT;
-                        break;
-                }
+             
+                //Calculamos el bono por hora por empleado 
+                Bono = HorasT * Convert.ToDecimal(dr["BonoPorHora"].ToString());
 
                 SueldoTotal = SueldoBase + Bono + PagoPorEntregas;
 
-                if (SueldoTotal > 10000)
+               
+               
+                //Obtenmos el descuento extra(Si lo existe ) calculado en base al sueldo
+                DataSet dsDescExtra = dbop.ObtenerDescuentosExtras_BySueldo(SueldoTotal, Anio);
+
+
+                foreach (DataRow drDE in dsDescExtra.Tables[0].Rows)
                 {
-                    ISR = Math.Round(Convert.ToDecimal(SueldoTotal * 0.11M), 2);
-                }
-                else
-                {
-                    ISR = Math.Round(Convert.ToDecimal(SueldoTotal * 0.09M), 2);
+                    //Si se encuentra impuesto extra este se le suma al convencional 
+                    ISRTOTAL = PorceISR + Convert.ToDecimal(drDE["Porcentaje"].ToString());
                 }
 
-                vales = Math.Round(Convert.ToDecimal(SueldoTotal * 0.04M), 2);
+
+                ISR =  Math.Round(Convert.ToDecimal(SueldoTotal * ISRTOTAL), 2);
+
+                //ISR += CantImpuestoExtra;
 
                 SueldoFinal = SueldoTotal - ISR;
 
+
+
+
+
+
+                vales = Math.Round(Convert.ToDecimal(SueldoFinal * PorceVales), 2);
+
+               
+                ///Guardamos el Objeto EmpleadoNomina para mostrar el listado con todos los calculos 
                 lstEmpleadoNomina.Add(new EmpleadoNomina
                 {
                     idEmpleado = Convert.ToInt64(dr["idEmpleado"]),

@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebApiRinku.Model
 {
+    /// <summary>
+    /// /Objeto Catalogo con los campos necesarios para formatear la información recibida en DataSet
+    /// </summary>
     public class Catalogo
     {
         public int id { get; set; }

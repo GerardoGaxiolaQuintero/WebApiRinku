@@ -28,7 +28,8 @@ namespace WebApiRinku.Model
 
 
         /// <summary>
-        /// Obtiene el listado de empleados activos 
+        /// Obtiene la listad de los empleados consumiendo el procedimiento "Empleados_R_Todos"
+        /// devolviendo como resultado un DataSet
         /// </summary>
         /// <returns></returns>
         public DataSet ObtenerEmpleados_Todos()
@@ -73,7 +74,8 @@ namespace WebApiRinku.Model
         }
 
         /// <summary>
-        /// /Obtiene el listado de roles para los catalogos
+        /// /Obtiene el listado de roles para los catalogos consumiendo el procedimiento "Roles_R_Todos"
+        /// y devolviendo un DataSet
         /// </summary>
         /// <returns></returns>
         public DataSet ObtenerRoles_Todos()
@@ -120,7 +122,8 @@ namespace WebApiRinku.Model
 
 
         /// <summary>
-        /// Obtiene el listado de meses para los catalogos 
+        /// /Obtiene el listado de meses para los catalogos consumiendo el procedimiento "Meses_R_Todos"
+        /// y devolviendo un DataSet
         /// </summary>
         /// <returns></returns>
         public DataSet ObtenerMeses_Todos()
@@ -167,7 +170,9 @@ namespace WebApiRinku.Model
 
 
         /// <summary>
-        /// Obtiene todas las nominas por mes
+        /// Obtiene una lista de todos los trabajadores con la cantidad de entregas que se tuvo en el mes y año indicado,
+        /// si estos no han tenido entregas devuelve un "0" en la cantida de entregas 
+        /// y recibe como parametro el Año y Mes de la Nómina 
         /// </summary>
         /// <param name="mes"></param>
         /// <returns></returns>
@@ -187,6 +192,7 @@ namespace WebApiRinku.Model
 
                 SqlCommand COM = new SqlCommand("NominaEmpleados_R_Todos", con);
                 COM.CommandType = CommandType.StoredProcedure;
+                //Pasamos los parametros requeridos por el procedimiento 
                 COM.Parameters.AddWithValue("@idMes", mes);
                 COM.Parameters.AddWithValue("@Anio", Anio);
 
@@ -215,7 +221,14 @@ namespace WebApiRinku.Model
         }
 
 
-
+        /// <summary>
+        /// Obtiene todos esos datos que pueden variar para el cálculo de la nómina consumiento el procedimiento
+        /// "Variantes_Todas" , recibe como parametro el Año teniendo pensado dar de alta cada una de estas variables por año y asi 
+        /// cuando cambien los datos no tendremos que compilar todo el sistema 
+        /// 
+        /// </summary>
+        /// <param name="Anio"></param>
+        /// <returns></returns>
         public DataSet ObtenerVariablesNomina(string  Anio)
         {
             SqlConnection con = Conecta();
@@ -259,7 +272,13 @@ namespace WebApiRinku.Model
         }
 
 
-
+        /// <summary>
+        /// Obtiene el descuento extra de ISR mencionado en el tabulador, recibiendo el año y suelto, esto pensando que en el año podria
+        /// cambiar el porcentaje 
+        /// </summary>
+        /// <param name="Sueldo"></param>
+        /// <param name="Anio"></param>
+        /// <returns></returns>
         public DataSet ObtenerDescuentosExtras_BySueldo(decimal Sueldo, string Anio)
         {
             SqlConnection con = Conecta();
@@ -315,7 +334,7 @@ namespace WebApiRinku.Model
 
 
         /// <summary>
-        /// Obtiene un empleado solamente por ID
+        /// Obtiene un empleado solamente por ID consumiento el procedimiento "Empleado_R_ById" y regresando un DataSet
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -364,7 +383,7 @@ namespace WebApiRinku.Model
 
 
         /// <summary>
-        /// /Obtiene un movimiento por id
+        /// /Obtiene un movimiento (Entrega) por su Id para mostrar los datos para edición 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -412,7 +431,9 @@ namespace WebApiRinku.Model
 
 
         /// <summary>
-        /// Da de alta aun Empleado
+        /// Da de alta aun Empleado, si en los datos recibidos viene el idEmpleado entonces este lo edita, pero si viene en  0
+        /// entonces lo da alta 
+        ///     
         /// </summary>
         /// <param name="Emp"></param>
         /// <returns></returns>
@@ -440,6 +461,7 @@ namespace WebApiRinku.Model
                     SqlDataAdapter da = new SqlDataAdapter(COM);
                     da.Fill(ds);
                     msg = "SUCCESS";
+                    ///Escribimos en el Log de transacciones la inserción o edición 
                     Log = COM.Connection.ConnectionString.ToString() + "-" + COM.CommandText.ToString() + "(" + Emp.Nombre + "," + Emp.ApePat + ", " + Emp.ApeMat + ", " + Emp.idRol + ") -" + msg;
 
                 }
@@ -455,6 +477,7 @@ namespace WebApiRinku.Model
                     SqlDataAdapter da = new SqlDataAdapter(COM);
                     da.Fill(ds);
                     msg = "SUCCESS";
+                    ///Escribimos en el Log de transacciones la inserción o edición 
                     Log = COM.Connection.ConnectionString.ToString() + "-" + COM.CommandText.ToString() + "(" + Emp.Nombre + "," + Emp.ApePat + ", " + Emp.ApeMat + ", " + Emp.idRol + ") -" + msg;
 
                 }
@@ -465,12 +488,13 @@ namespace WebApiRinku.Model
             catch (Exception ex)
             {
                 msg = "FAILURE";
-                //Log = COM.Connection.ConnectionString.ToString() + "-" + COM.CommandText.ToString() + "(" + Emp.Nombre + "," + Emp.ApePat + ", " + Emp.ApeMat + ", " + Emp.idRol + ") -" + msg;
+                
 
                 throw;
             }
             finally
             {
+                //Le mandamos el mensaje a guardar en el LOG
                 EscribeLog(Log);
                 if (con.State == ConnectionState.Open)
                 {
@@ -504,16 +528,19 @@ namespace WebApiRinku.Model
                
                 msg = "Se Eliminó correctamente el empleado #" + idEmpleado;
 
+               ///Variable que guarda el mensaje que se ira al Log
+
                 Log = COM.Connection.ConnectionString.ToString() + "-" + COM.CommandText.ToString() + "(" + idEmpleado + ") - SUCCESS";
 
 
-                //  return ds;
+              
 
             }
             catch (Exception ex)
             {
                
-                msg = "Error al eliminar la poliza #" + idEmpleado;
+                msg = "Error al eliminar el empleado #" + idEmpleado;
+                ///Variable que guarda el mensaje que se ira al Log
                 Log = COM.Connection.ConnectionString.ToString() + "-" + COM.CommandText.ToString() + "(" + idEmpleado + ") - ERROR";
                 throw;
             }
@@ -556,7 +583,7 @@ namespace WebApiRinku.Model
                 Log = COM.Connection.ConnectionString.ToString() + "-" + COM.CommandText.ToString() + "(" + idMovimiento + ") - SUCCESS";
 
 
-                //  return ds;
+              
 
             }
             catch (Exception ex)
@@ -579,7 +606,8 @@ namespace WebApiRinku.Model
         }
 
         /// <summary>
-        /// Da de alta un nuevo Movimiento 
+        /// Da de alta un nuevo Movimiento (Captura de Entregas), si en los datos recibidos viene el idmovimiento entonces 
+        /// este edita la información pero si viene en "0" entonces este lo da de alta 
         /// </summary>
         /// <param name="Mov"></param>
         /// <returns></returns>
@@ -626,13 +654,12 @@ namespace WebApiRinku.Model
             {
 
 
-               //  return ds;
-
+             
             }
             catch (Exception ex)
             {
                 msg = "FAILURE";
-               // Log = COM.Connection.ConnectionString.ToString() + "-" + COM.CommandText.ToString() + "(" + Mov.idEmpleado + "," + Mov.idRol + ", " + Mov.idMes + ", " + Mov.CantEntrega + ") -" + msg;
+               
 
                 throw;
             }
@@ -657,11 +684,12 @@ namespace WebApiRinku.Model
 
         public static void EscribeLog(string message)
         {
-
+            ///Ruta para guardar el Log 
             string path = "C://RinKu//Log2.txt";
             StreamWriter stream = null;
             try
             {
+                //Si no existe lo crea
                 if (!File.Exists(path))
                 {
                     File.Create(path);
@@ -671,6 +699,7 @@ namespace WebApiRinku.Model
 
                 using (System.IO.StreamWriter file = new System.IO.StreamWriter(path, true))
                 {
+                    ///Escribe una nueva linea al Log
                     file.WriteLine(string.Format("{0} - {1}.", DateTime.Now, message));
                 }
             }
@@ -685,6 +714,12 @@ namespace WebApiRinku.Model
             }
         }
 
+
+        /// <summary>
+        /// /Obtiene todos los movimientos de una empleado por su Id, esto para la consulta de movimientos capturados 
+        /// </summary>
+        /// <param name="idEmpleado"></param>
+        /// <returns></returns>
         public DataSet ObtenerMovimientos_ByidEmpleado(long  idEmpleado)
         {
             SqlConnection con = Conecta();

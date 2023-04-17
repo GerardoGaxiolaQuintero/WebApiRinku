@@ -14,7 +14,10 @@ namespace WebApiRinku.Controllers
     public class EmpleadoController : ControllerBase
     {
 
-
+        /// <summary>
+        /// Controlador que recibe un objeto por metodo post y lo manda al modelo para guardarlos
+        /// Este guarda o edita a un Empleado 
+        /// </summary>
         db dbop = new db();
         [HttpPost]
         public string  Guarda([FromBody] Empleado Emp)
@@ -52,7 +55,11 @@ namespace WebApiRinku.Controllers
 
         }
 
-
+        /// <summary>
+        /// /Consulta a un empleado por IdEmpleado, esto para la edición
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public Empleado Empleado_By_id(int id)
         {

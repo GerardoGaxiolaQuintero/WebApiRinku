@@ -13,6 +13,11 @@ namespace WebApiRinku.Controllers
     public class RolesController : ControllerBase
     {
         db dbop = new db();
+
+        /// <summary>
+        /// /Consulta todos los roles activos del catalogo 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public List<Catalogo> ListadoRoles()
         {
