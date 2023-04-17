@@ -16,11 +16,53 @@ namespace WebApiRinku.Controllers
 
         db dbop = new db();
         [HttpGet("{id}")]
-        public List<EmpleadoNomina> ListadoNomina(int id)
+        public List<EmpleadoNomina> ListadoNomina(string Anio,int id)
         {
-            //int mes = 1;
+
+            ///Consultamos las variables para cancular la nomina 
+
+            List<Variable> Variables = new List<Variable>();
+
+            DataSet dsVariables = dbop.ObtenerVariablesNomina(Anio);
+
+            decimal JornadaLaboral = 0, DiaSemana = 0, PorceISR = 0, PorceVales = 0, SemanasMes = 0;
+
+            
+
+            foreach (DataRow drVariable in dsVariables.Tables[0].Rows)
+            {
+                string TituloVariante = drVariable["DescVariante"].ToString();
+                switch (TituloVariante)
+                {
+                    case "JornadaLaboral":
+                        JornadaLaboral = Convert.ToDecimal(drVariable["ValorVariante"].ToString());
+                        break;
+
+                    case "DiasSemana":
+                        DiaSemana = Convert.ToDecimal(drVariable["ValorVariante"].ToString());
+                        break;
+
+                    case "PorceISR":
+                        PorceISR = Convert.ToDecimal(drVariable["ValorVariante"].ToString());
+                        break;
+
+                    case "ProceVales":
+                        PorceVales = Convert.ToDecimal(drVariable["ValorVariante"].ToString());
+                        break;
+
+                    case "SemanasMes":
+                        SemanasMes = Convert.ToDecimal(drVariable["ValorVariante"].ToString());
+                        break;
+
+
+                }
+            }
+
+            //int HorasTrabajadasGeneral = (JornadaLaboral * DiaSemana) * SemanasMes;
+
+
             List<EmpleadoNomina> lstEmpleadoNomina = new List<EmpleadoNomina>();
-            DataSet ds = dbop.ObtenerNominas_Todas_ByMes(id);
+            DataSet ds = dbop.ObtenerNominas_Todas_ByMes(Anio, id);
 
             foreach (DataRow dr in ds.Tables[0].Rows)
             {

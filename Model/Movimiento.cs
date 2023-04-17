@@ -15,6 +15,7 @@ namespace WebApiRinku.Model
 
         public string  DescRol { get; set; }
 
+        public string  Anio { get; set; }
         public int  idMes { get; set; }
 
         public string  DescMes { get; set; }

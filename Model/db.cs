@@ -171,7 +171,7 @@ namespace WebApiRinku.Model
         /// </summary>
         /// <param name="mes"></param>
         /// <returns></returns>
-        public DataSet ObtenerNominas_Todas_ByMes(int mes )
+        public DataSet ObtenerNominas_Todas_ByMes( string Anio ,int mes )
         {
             SqlConnection con = Conecta();
 
@@ -188,7 +188,8 @@ namespace WebApiRinku.Model
                 SqlCommand COM = new SqlCommand("NominaEmpleados_R_Todos", con);
                 COM.CommandType = CommandType.StoredProcedure;
                 COM.Parameters.AddWithValue("@idMes", mes);
-              
+                COM.Parameters.AddWithValue("@Anio", Anio);
+
                 SqlDataAdapter da = new SqlDataAdapter(COM);
                 da.Fill(ds);
                 msg = "SUCCESS";
@@ -212,6 +213,106 @@ namespace WebApiRinku.Model
             }
             return ds;
         }
+
+
+
+        public DataSet ObtenerVariablesNomina(string  Anio)
+        {
+            SqlConnection con = Conecta();
+
+            string msg = string.Empty;
+            DataSet ds = new DataSet();
+
+
+
+
+
+            try
+            {
+
+                SqlCommand COM = new SqlCommand("Variantes_Todas", con);
+                COM.CommandType = CommandType.StoredProcedure;
+                COM.Parameters.AddWithValue("@Anio", Anio);
+
+                SqlDataAdapter da = new SqlDataAdapter(COM);
+                da.Fill(ds);
+                msg = "SUCCESS";
+                //  return ds;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+                {
+
+                }
+            }
+            return ds;
+        }
+
+
+
+        public DataSet ObtenerDescuentosExtras_BySueldo(decimal Sueldo, string Anio)
+        {
+            SqlConnection con = Conecta();
+
+            string msg = string.Empty;
+            DataSet ds = new DataSet();
+
+
+
+
+
+            try
+            {
+
+                SqlCommand COM = new SqlCommand("ImpuestoExtra_BySueldo", con);
+                COM.CommandType = CommandType.StoredProcedure;
+                COM.Parameters.AddWithValue("@Sueldo", Sueldo);
+                COM.Parameters.AddWithValue("@Anio", Anio);
+
+                SqlDataAdapter da = new SqlDataAdapter(COM);
+                da.Fill(ds);
+                msg = "SUCCESS";
+                //  return ds;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+                {
+
+                }
+            }
+            return ds;
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// Obtiene un empleado solamente por ID
@@ -334,6 +435,7 @@ namespace WebApiRinku.Model
                     COM.Parameters.AddWithValue("@Nombre", Emp.Nombre);
                     COM.Parameters.AddWithValue("@ApePat", Emp.ApePat);
                     COM.Parameters.AddWithValue("@ApeMat", Emp.ApeMat);
+                    COM.Parameters.AddWithValue("@FechaAlta", Emp.FechaAlta);
                     COM.Parameters.AddWithValue("@idRol", Emp.idRol);
                     SqlDataAdapter da = new SqlDataAdapter(COM);
                     da.Fill(ds);
@@ -348,6 +450,7 @@ namespace WebApiRinku.Model
                     COM.Parameters.AddWithValue("@Nombre", Emp.Nombre);
                     COM.Parameters.AddWithValue("@ApePat", Emp.ApePat);
                     COM.Parameters.AddWithValue("@ApeMat", Emp.ApeMat);
+                    COM.Parameters.AddWithValue("@FechaAlta", Emp.FechaAlta);
                     COM.Parameters.AddWithValue("@idRol", Emp.idRol);
                     SqlDataAdapter da = new SqlDataAdapter(COM);
                     da.Fill(ds);
@@ -492,6 +595,7 @@ namespace WebApiRinku.Model
                 COM.CommandType = CommandType.StoredProcedure;
                 COM.Parameters.AddWithValue("@idMovimiento", Mov.idMovimiento);
                 COM.Parameters.AddWithValue("@idRol", Mov.idRol);
+                COM.Parameters.AddWithValue("@Anio", Mov.Anio);
                 COM.Parameters.AddWithValue("@idMes", Mov.idMes);
                 COM.Parameters.AddWithValue("@CantEntregadas", Mov.CantEntrega);
                 SqlDataAdapter da = new SqlDataAdapter(COM);
@@ -507,6 +611,7 @@ namespace WebApiRinku.Model
                 COM.CommandType = CommandType.StoredProcedure;
                 COM.Parameters.AddWithValue("@idEmpleado", Mov.idEmpleado);
                 COM.Parameters.AddWithValue("@idRol", Mov.idRol);
+                COM.Parameters.AddWithValue("@Anio", Mov.Anio);
                 COM.Parameters.AddWithValue("@idMes", Mov.idMes);
                 COM.Parameters.AddWithValue("@CantEntregadas", Mov.CantEntrega);
                 SqlDataAdapter da = new SqlDataAdapter(COM);

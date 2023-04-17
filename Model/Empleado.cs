@@ -12,6 +12,8 @@ namespace WebApiRinku.Model
         public string ApePat { get; set; }
         public string ApeMat { get; set; }
         public int idRol { get; set; }
+
+        public DateTime FechaAlta {get; set;}
         public string DescRol { get; set; }
         public bool Activo { get; set; }
 

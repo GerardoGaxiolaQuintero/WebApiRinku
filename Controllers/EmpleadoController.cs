@@ -42,7 +42,7 @@ namespace WebApiRinku.Controllers
             }
             catch (Exception es)
             {
-                msg = "Error al Guardar Poliza";
+                msg = "Error el Guardar al empleado";
                 throw;
             }
 
@@ -71,7 +71,9 @@ namespace WebApiRinku.Controllers
                     Nombre = dr["Nombre"].ToString(),
                     ApePat = dr["ApePat"].ToString(),
                     ApeMat = dr["ApeMat"].ToString(),
-                    DescRol = dr["DescRol"].ToString()
+                    DescRol = dr["DescRol"].ToString(),
+                    FechaAlta = Convert.ToDateTime(dr["FechaAlta"].ToString())
+               
                     
 
 

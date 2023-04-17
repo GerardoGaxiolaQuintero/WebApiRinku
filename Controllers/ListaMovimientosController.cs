@@ -30,7 +30,8 @@ namespace WebApiRinku.Controllers
                     idEmpleado = Convert.ToInt64(dr["idEmpleado"]),
                    DescRol = dr["DescRolEmpleado"].ToString(),
                     DescMes = dr["DescMes"].ToString(),
-                   CantEntrega = Convert.ToInt32(dr["CantEntregas"].ToString())
+                   CantEntrega = Convert.ToInt32(dr["CantEntregas"].ToString()),
+                   Anio = dr["Anio"].ToString()
 
 
 
